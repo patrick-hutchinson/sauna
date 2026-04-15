@@ -1,0 +1,56 @@
+.page {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  background: radial-gradient(circle at top, #152233 0%, #080a0e 60%);
+}
+
+.canvas {
+  width: 100%;
+  min-height: 100vh;
+}
+
+.status {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: rgb(0 0 0 / 45%);
+  color: #dbe9ff;
+  font-size: 14px;
+  font-family: Arial, sans-serif;
+}
+
+.materialControls {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  z-index: 2;
+}
+
+.materialButton {
+  border: 1px solid rgb(255 255 255 / 30%);
+  background: rgb(6 12 20 / 68%);
+  color: #dbe9ff;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 13px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 120ms ease, border-color 120ms ease;
+}
+
+.materialButton:hover {
+  background: rgb(21 35 53 / 85%);
+  border-color: rgb(172 208 255 / 55%);
+}
+
+.active {
+  background: rgb(31 72 120 / 90%);
+  border-color: rgb(172 208 255 / 95%);
+  color: #fff;
+}
