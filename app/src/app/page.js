@@ -10,6 +10,7 @@ import styles from "./page.module.css";
 export default function Home() {
   const mountRef = useRef(null);
   const [status, setStatus] = useState("Loading model...");
+  const [modelVariant, setModelVariant] = useState("compressed01");
 
   useEffect(() => {
     if (!mountRef.current) return;
@@ -58,6 +59,8 @@ export default function Home() {
 
     let fittedModelSize = null;
     let fittedModelCenter = new THREE.Vector3();
+    const morphTargets = [];
+    const clock = new THREE.Clock();
 
     const getVisibleMeshBounds = (root) => {
       const worldBox = new THREE.Box3();
@@ -111,8 +114,13 @@ export default function Home() {
     };
 
     const loader = new GLTFLoader();
+    const modelPath =
+      modelVariant === "compressed02"
+        ? "/assets/models/animated/Ice-Draft01-Compressed02-withShapekeys.glb"
+        : "/assets/models/animated/Ice-Draft01-Compressed01-withShapekeys.glb";
+
     loader.load(
-      "/assets/models/ice-structure-02.glb",
+      modelPath,
       (gltf) => {
         const model = gltf.scene;
         scene.add(model);
@@ -123,6 +131,18 @@ export default function Home() {
           object.receiveShadow = false;
           // Keep embedded Blender materials exactly as authored.
           object.material.needsUpdate = true;
+
+          if (!object.morphTargetDictionary || !object.morphTargetInfluences) return;
+          const indices = Object.entries(object.morphTargetDictionary)
+            .sort((a, b) => a[1] - b[1])
+            .map((entry) => entry[1]);
+          if (indices.length < 2) return;
+
+          object.morphTargetInfluences.fill(0);
+          morphTargets.push({
+            influences: object.morphTargetInfluences,
+            indices,
+          });
         });
 
         const initialBounds = getVisibleMeshBounds(model);
@@ -162,7 +182,7 @@ export default function Home() {
       undefined,
       (error) => {
         console.error(error);
-        setStatus("Failed to load /assets/models/ice-structure-02.glb");
+        setStatus(`Failed to load ${modelPath}`);
       },
     );
 
@@ -185,6 +205,25 @@ export default function Home() {
     let frameId = 0;
     const animate = () => {
       frameId = requestAnimationFrame(animate);
+
+      if (morphTargets.length > 0) {
+        const secondsPerMorph = 8;
+        const time = clock.getElapsedTime() / secondsPerMorph;
+        const phase = Math.floor(time);
+        const t = time - phase;
+        const eased = t * t * (3 - 2 * t);
+
+        for (const target of morphTargets) {
+          const {indices, influences} = target;
+          const from = phase % indices.length;
+          const to = (from + 1) % indices.length;
+
+          influences.fill(0);
+          influences[indices[from]] = 1 - eased;
+          influences[indices[to]] = eased;
+        }
+      }
+
       controls.update();
       renderer.render(scene, camera);
     };
@@ -207,12 +246,28 @@ export default function Home() {
         object.geometry?.dispose();
       });
     };
-  }, []);
+  }, [modelVariant]);
 
   return (
     <main className={styles.page}>
       <div ref={mountRef} className={styles.canvas} />
       {status ? <p className={styles.status}>{status}</p> : null}
+      <div className={styles.materialControls}>
+        <button
+          type="button"
+          className={`${styles.materialButton} ${modelVariant === "compressed01" ? styles.active : ""}`}
+          onClick={() => setModelVariant("compressed01")}
+        >
+          Ice 01
+        </button>
+        <button
+          type="button"
+          className={`${styles.materialButton} ${modelVariant === "compressed02" ? styles.active : ""}`}
+          onClick={() => setModelVariant("compressed02")}
+        >
+          Ice 02
+        </button>
+      </div>
     </main>
   );
 }
