@@ -1,17 +1,17 @@
 import { PortableText } from "@portabletext/react";
 import AnimationLink from "@/components/Animation/AnimationLink";
 
-const Text = ({ text, typo, className }) => {
+const Text = ({ text, typo, className, onClick }) => {
   if (!Array.isArray(text)) {
     return text ? (
-      <p typo={typo} className={className}>
+      <p typo={typo} className={className} onClick={onClick}>
         {text}
       </p>
     ) : null;
   }
 
   return (
-    <div className={className} typo={typo}>
+    <div className={className} typo={typo} onClick={onClick}>
       <PortableText
         value={text}
         components={{

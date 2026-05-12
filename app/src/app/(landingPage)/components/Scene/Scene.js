@@ -11,11 +11,18 @@ import { createMaskedCompositeRenderer } from "./render/maskedComposite";
 import { frameCameraToModel, getVisibleMeshBounds } from "./utils/modelFraming";
 import styles from "../../page.module.css";
 
-export default function Scene({ createEnvironmentScene, lightsEnabled = true, showHDRI }) {
+import { motion } from "framer-motion";
+
+import Text from "@/components/Text/Text";
+
+export default function Scene({ createEnvironmentScene, lightsEnabled = true, showHDRI, activeSection, setView }) {
   const [status, setStatus] = useState("Loading...");
   const mountRef = useRef(null);
   const showHDRIRef = useRef(showHDRI);
 
+  const handleTextClick = () => {
+    setView("text");
+  };
   useEffect(() => {
     showHDRIRef.current = showHDRI;
   }, [showHDRI]);
@@ -209,10 +216,15 @@ export default function Scene({ createEnvironmentScene, lightsEnabled = true, sh
   }, [createEnvironmentScene, lightsEnabled]);
 
   return (
-    <>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 1, ease: "easeOut" }}
+    >
       {status ? <p className={styles.status}>{status}</p> : null}
-      {/* <div>{sectionPhrase}</div> */}
+      <Text onClick={handleTextClick} className={`${styles.sectionKey}`} text={activeSection?.sectionKey} />
       <div ref={mountRef} className={styles.canvas} />;
-    </>
+    </motion.div>
   );
 }
