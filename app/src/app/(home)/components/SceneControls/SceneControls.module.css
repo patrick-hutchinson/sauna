@@ -1,0 +1,99 @@
+.menuRoot {
+  position: fixed;
+  top: 22px;
+  right: 24px;
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.burgerButton {
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  border: 1px solid rgb(255 255 255 / 36%);
+  background: rgb(7 10 14 / 72%);
+  backdrop-filter: blur(8px);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  transition: background 180ms ease, border-color 180ms ease, transform 180ms ease;
+}
+
+.burgerButton:hover {
+  background: rgb(20 25 34 / 92%);
+  border-color: rgb(185 212 255 / 70%);
+}
+
+.burgerButton:active {
+  transform: scale(0.98);
+}
+
+.burgerLine {
+  width: 16px;
+  height: 2px;
+  border-radius: 99px;
+  background: rgb(236 244 255 / 95%);
+}
+
+.burgerOpen {
+  border-color: rgb(185 212 255 / 85%);
+}
+
+.menuPanel {
+  width: 180px;
+  padding: 10px;
+  border-radius: 12px;
+  border: 1px solid rgb(255 255 255 / 24%);
+  background: rgb(7 11 17 / 88%);
+  backdrop-filter: blur(10px);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  opacity: 0;
+  transform: translateY(-8px);
+  pointer-events: none;
+  transition: opacity 220ms ease, transform 220ms ease;
+}
+
+.menuPanelOpen {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.menuLabel {
+  margin: 2px 4px 0;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgb(192 210 236 / 78%);
+}
+
+.menuButton {
+  border: 1px solid rgb(255 255 255 / 22%);
+  background: rgb(9 15 24 / 70%);
+  color: #dbe9ff;
+  border-radius: 10px;
+  padding: 9px 10px;
+  font-size: 12px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 120ms ease, border-color 120ms ease;
+}
+
+.menuButton:hover {
+  background: rgb(24 40 62 / 88%);
+  border-color: rgb(172 208 255 / 55%);
+}
+
+.active {
+  background: rgb(31 72 120 / 90%);
+  border-color: rgb(172 208 255 / 95%);
+  color: #fff;
+}
