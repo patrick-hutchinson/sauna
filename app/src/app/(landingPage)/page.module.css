@@ -66,14 +66,21 @@
   color: #fff;
 }
 
-.pageFooter {
+.landingPageFooter {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
 
   position: fixed;
 
-  padding: 72px;
+  padding: var(--margin-page);
   bottom: 0px;
   width: 100vw;
+}
+
+.sectionText {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }

@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
-import { createIceMaterial } from "../materials/iceMaterial";
+import { createIceMaterial } from "./materials/iceMaterial";
 import { updateMorphTargets } from "./animation/morphLoop";
 import { setupIceLighting } from "./lighting/iceLighting";
 import { createMaskedCompositeRenderer } from "./render/maskedComposite";
@@ -211,6 +211,7 @@ export default function Scene({ createEnvironmentScene, lightsEnabled = true, sh
   return (
     <>
       {status ? <p className={styles.status}>{status}</p> : null}
+      {/* <div>{sectionPhrase}</div> */}
       <div ref={mountRef} className={styles.canvas} />;
     </>
   );

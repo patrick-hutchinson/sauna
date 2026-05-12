@@ -10,10 +10,13 @@ import { createColorHDRI } from "./components/Scene/hdri/hdriColor";
 import { createMonoHDRI } from "./components/Scene/hdri/hdriMono";
 
 import styles from "./page.module.css";
-import Scene from "./assets/scenes/Scene";
+import Scene from "./components/Scene/Scene";
 import { AnimatePresence } from "framer-motion";
 
-export default function Home() {
+import Text from "@/components/Text/Text";
+
+const LandingPage = ({ page }) => {
+  const [view, setView] = useState("model");
   const [activeSection, setActiveSection] = useState("The Approach");
 
   const [modelVariant, setModelVariant] = useState("compressed01");
@@ -27,8 +30,11 @@ export default function Home() {
       <LandingPageHeader activeSection={activeSection} />
 
       <AnimatePresence>
-        <Phrase />
-        <Scene lightsEnabled={lightsEnabled} showHDRI={showHDRI} createEnvironmentScene={hdri} />
+        {view === "text" ? (
+          <Text text={activeSection.sectionText} className={styles.sectionText} typo="h3" />
+        ) : (
+          <Scene lightsEnabled={lightsEnabled} showHDRI={showHDRI} createEnvironmentScene={hdri} />
+        )}
       </AnimatePresence>
 
       <SceneControls
@@ -40,7 +46,9 @@ export default function Home() {
         setLightsEnabled={setLightsEnabled}
       />
 
-      <LandingPageFooter setActiveSection={setActiveSection} />
+      <LandingPageFooter page={page} setActiveSection={setActiveSection} setView={setView} />
     </main>
   );
-}
+};
+
+export default LandingPage;
