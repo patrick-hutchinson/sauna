@@ -15,7 +15,14 @@ import { motion } from "framer-motion";
 
 import Text from "@/components/Text/Text";
 
-export default function Scene({ createEnvironmentScene, lightsEnabled = true, showHDRI, activeSection, setView }) {
+export default function Scene({
+  createEnvironmentScene,
+  lightsEnabled = true,
+  showHDRI,
+  activeSection,
+  activeSectionIndex,
+  setView,
+}) {
   const [status, setStatus] = useState("Loading...");
   const mountRef = useRef(null);
   const showHDRIRef = useRef(showHDRI);
@@ -23,6 +30,13 @@ export default function Scene({ createEnvironmentScene, lightsEnabled = true, sh
   const handleTextClick = () => {
     setView("text");
   };
+
+  const sectionKeyPositionStyle =
+    activeSectionIndex === 0
+      ? { left: "72px", right: "auto", transform: "translateY(-50%)", textAlign: "left" }
+      : activeSectionIndex === 2
+        ? { left: "auto", right: "72px", transform: "translateY(-50%)", textAlign: "right" }
+        : { left: "50%", right: "auto", transform: "translate(-50%, -50%)", textAlign: "center" };
   useEffect(() => {
     showHDRIRef.current = showHDRI;
   }, [showHDRI]);
@@ -223,7 +237,12 @@ export default function Scene({ createEnvironmentScene, lightsEnabled = true, sh
       transition={{ duration: 1, ease: "easeOut" }}
     >
       {status ? <p className={styles.status}>{status}</p> : null}
-      <Text onClick={handleTextClick} className={`${styles.sectionKey}`} text={activeSection?.sectionKey} />
+      <Text
+        onClick={handleTextClick}
+        className={styles.sectionKey}
+        style={sectionKeyPositionStyle}
+        text={activeSection?.sectionKey}
+      />
       <div ref={mountRef} className={styles.canvas} />;
     </motion.div>
   );

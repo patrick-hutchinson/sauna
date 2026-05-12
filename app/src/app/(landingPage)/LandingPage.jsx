@@ -25,6 +25,9 @@ const LandingPage = ({ page }) => {
   const [lightsEnabled, setLightsEnabled] = useState(false);
 
   const hdri = modelVariant === "compressed01" ? createMonoHDRI : createColorHDRI;
+  const activeSectionIndex = page?.sections?.findIndex(
+    (section) => section.sectionKey === activeSection?.sectionKey,
+  );
 
   if (!page || page.length === 0) return;
 
@@ -56,6 +59,7 @@ const LandingPage = ({ page }) => {
             showHDRI={showHDRI}
             createEnvironmentScene={hdri}
             activeSection={activeSection}
+            activeSectionIndex={activeSectionIndex}
             setView={setView}
           />
         )}
