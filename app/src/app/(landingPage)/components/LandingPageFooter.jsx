@@ -22,6 +22,7 @@ const LandingPageFooter = ({ page, activeSection, setActiveSection, setView }) =
           key={section.sectionKey || section.sectionTitle}
           className={`${activeSection === section ? styles.active : ""} ${styles.sectionTitle}`}
           onClick={() => handleSectionClick(section)}
+          typo="h3"
         >
           {section.sectionTitle}
         </div>

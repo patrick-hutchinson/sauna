@@ -236,12 +236,13 @@ export default function Scene({
       exit={{ opacity: 0 }}
       transition={{ duration: 1, ease: "easeOut" }}
     >
-      {status ? <p className={styles.status}>{status}</p> : null}
+      {/* {status ? <p className={styles.status}>{status}</p> : null} */}
       <Text
         onClick={handleTextClick}
         className={styles.sectionKey}
         style={sectionKeyPositionStyle}
         text={activeSection?.sectionKey}
+        typo="h3"
       />
       <div ref={mountRef} className={styles.canvas} />;
     </motion.div>
