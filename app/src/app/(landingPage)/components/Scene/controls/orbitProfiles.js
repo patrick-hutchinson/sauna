@@ -49,9 +49,9 @@ const MODEL_PROFILES = {
 };
 
 const DEFAULTS = {
-  rotateSpeed: 1,
-  baseDamping: 0.08,
-  edgeDamping: 0.08,
+  rotateSpeed: 0.15,
+  baseDamping: 0.01,
+  edgeDamping: 0.01,
 };
 
 function orbitYToPolar(orbitYDeg) {
