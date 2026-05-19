@@ -9,14 +9,14 @@ export const useAnimatedNavigation = () => {
 
     const pageAnimation = () => {
       document.documentElement.animate([{ opacity: 1 }, { opacity: 0 }], {
-        duration: 1000,
+        duration: 2000,
         easing: "ease",
         fill: "forwards",
         pseudoElement: "::view-transition-old(root)",
       });
 
       document.documentElement.animate([{ opacity: 0 }, { opacity: 1 }], {
-        duration: 1000,
+        duration: 2000,
         easing: "ease",
         fill: "forwards",
         pseudoElement: "::view-transition-new(root)",

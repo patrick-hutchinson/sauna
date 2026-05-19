@@ -4,77 +4,73 @@ import { useEffect, useState } from "react";
 
 import { AnimatePresence, motion } from "framer-motion";
 
-import { createColorHDRI } from "./components/Scene/hdri/hdriColor";
-import { createMonoHDRI } from "./components/Scene/hdri/hdriMono";
+import { createHDRI } from "./components/Scene/hdri/hdri";
 
 import Scene from "./components/Scene/Scene";
 import Text from "@/components/Text/Text";
 
 import LandingPageHeader from "./components/LandingPageHeader";
 import LandingPageFooter from "./components/LandingPageFooter";
-import SceneControls from "./components/SceneControls/SceneControls";
 
 import styles from "./page.module.css";
 
+const SECTION_MODELS = [
+  { modelPath: "/assets/models/13/13.glb", thumbnailPath: "/assets/models/13/13.mp4" },
+  { modelPath: "/assets/models/14/14.glb", thumbnailPath: "/assets/models/14/14.mp4" },
+  { modelPath: "/assets/models/16/16.glb", thumbnailPath: "/assets/models/16/16.mp4" },
+];
+
 const LandingPage = ({ page }) => {
-  const [view, setView] = useState("text");
+  const [view, setView] = useState("model");
   const [activeSection, setActiveSection] = useState();
 
-  const [modelVariant, setModelVariant] = useState("compressed01");
-  const [showHDRI, setShowHDRI] = useState(false);
-  const [lightsEnabled, setLightsEnabled] = useState(false);
-
-  const hdri = modelVariant === "compressed01" ? createMonoHDRI : createColorHDRI;
-  const activeSectionIndex = page?.sections?.findIndex(
-    (section) => section.sectionKey === activeSection?.sectionKey,
-  );
+  const hdri = createHDRI;
+  const activeSectionIndex = page?.sections?.findIndex((section) => section.sectionKey === activeSection?.sectionKey);
+  const activeModel = SECTION_MODELS[Math.max(0, activeSectionIndex)] ?? SECTION_MODELS[0];
 
   if (!page || page.length === 0) return;
 
   useEffect(() => {
-    setActiveSection(page.sections[0]);
+    const sections = page?.sections ?? [];
+    if (sections.length === 0) return;
+    const randomIndex = Math.floor(Math.random() * sections.length);
+    setActiveSection(sections[randomIndex]);
   }, [page]);
 
   if (!activeSection) return null;
 
   return (
     <main className={styles.page}>
-      <AnimatePresence>{view === "text" && <LandingPageHeader setView={setView} />}</AnimatePresence>
+      <AnimatePresence mode="wait">
+        {view === "text" && (
+          <LandingPageHeader key={activeSection.sectionKey} setView={setView} thumbnailPath={activeModel.thumbnailPath} />
+        )}
+      </AnimatePresence>
 
-      <AnimatePresence mode="popLayout">
+      <AnimatePresence mode="wait">
         {view === "text" ? (
           <motion.div
             className={styles.sectionText}
-            key={activeSection.sectionKey || activeSection.sectionTitle}
+            key={activeSection.sectionKey}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 1, ease: "easeOut" }}
+            transition={{ duration: 2, ease: "easeOut" }}
           >
             <Text text={activeSection.sectionText} typo="h3" />
           </motion.div>
         ) : (
           <Scene
-            lightsEnabled={lightsEnabled}
-            showHDRI={showHDRI}
             createEnvironmentScene={hdri}
             activeSection={activeSection}
             activeSectionIndex={activeSectionIndex}
+            modelPath={activeModel.modelPath}
             setView={setView}
           />
         )}
       </AnimatePresence>
 
-      <SceneControls
-        modelVariant={modelVariant}
-        setModelVariant={setModelVariant}
-        showHDRI={showHDRI}
-        setShowHDRI={setShowHDRI}
-        lightsEnabled={lightsEnabled}
-        setLightsEnabled={setLightsEnabled}
-      />
-
-      <AnimatePresence>
+      <AnimatePresence mode="wait">
         {view === "text" && (
           <LandingPageFooter
             page={page}

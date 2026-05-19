@@ -4,43 +4,45 @@ import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { MeshoptDecoder } from "three/examples/jsm/libs/meshopt_decoder.module.js";
 import { createIceMaterial } from "./materials/iceMaterial";
 import { updateMorphTargets } from "./animation/morphLoop";
 import { setupIceLighting } from "./lighting/iceLighting";
 import { createMaskedCompositeRenderer } from "./render/maskedComposite";
 import { frameCameraToModel, getVisibleMeshBounds } from "./utils/modelFraming";
+import { applyInitialOrbitAngles, applyOrbitControlsProfile, updateOrbitEdgeSmoothing } from "./controls/orbitProfiles";
 import styles from "../../page.module.css";
 
 import { motion } from "framer-motion";
 
 import Text from "@/components/Text/Text";
 
-export default function Scene({
-  createEnvironmentScene,
-  lightsEnabled = true,
-  showHDRI,
-  activeSection,
-  activeSectionIndex,
-  setView,
-}) {
+export default function Scene({ createEnvironmentScene, lightsEnabled = true, activeSection, modelPath, setView }) {
   const [status, setStatus] = useState("Loading...");
+  const [copied, setCopied] = useState(false);
   const mountRef = useRef(null);
-  const showHDRIRef = useRef(showHDRI);
+  const rotationDebugRef = useRef(null);
 
   const handleTextClick = () => {
     setView("text");
   };
+  const handleCopyDebug = async () => {
+    if (!rotationDebugRef.current?.textContent) return;
+    try {
+      await navigator.clipboard.writeText(rotationDebugRef.current.textContent);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 900);
+    } catch {
+      // No-op: clipboard may be unavailable in some contexts.
+    }
+  };
 
-  const sectionKeyPositionStyle =
-    activeSectionIndex === 0
-      ? { left: "72px", right: "auto", transform: "translateY(-50%)", textAlign: "left" }
-      : activeSectionIndex === 2
-        ? { left: "auto", right: "72px", transform: "translateY(-50%)", textAlign: "right" }
-        : { left: "50%", right: "auto", transform: "translate(-50%, -50%)", textAlign: "center" };
-  useEffect(() => {
-    showHDRIRef.current = showHDRI;
-  }, [showHDRI]);
-
+  const sectionKeyPositionStyle = {
+    left: "50%",
+    right: "auto",
+    transform: "translate(-50%, -50%)",
+    textAlign: "center",
+  };
   useEffect(() => {
     if (!mountRef.current) return;
 
@@ -74,8 +76,10 @@ export default function Scene({
     const maskedComposite = createMaskedCompositeRenderer();
 
     const controls = new OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true;
-    controls.enablePan = false;
+    const isModel13 = modelPath === "/assets/models/13/13.glb";
+    const isModel16 = modelPath === "/assets/models/16/16.glb";
+    const orbitProfileState = applyOrbitControlsProfile(controls, modelPath);
+    const modelFillRatio = isModel16 ? 3.2 : isModel13 ? 1.067 : 1.6;
 
     const { rimLight, rimTarget } = setupIceLighting(scene, lightsEnabled);
 
@@ -86,13 +90,16 @@ export default function Scene({
     const clock = new THREE.Clock();
 
     const loader = new GLTFLoader();
-    const modelPath = "/assets/models/turbosquid/12/model.glb";
+    loader.setMeshoptDecoder(MeshoptDecoder);
 
     loader.load(
       modelPath,
       (gltf) => {
         const model = gltf.scene;
         modelRoot = model;
+        if (modelPath === "/assets/models/14/14.glb") {
+          model.rotation.x = Math.PI / 2;
+        }
         scene.add(model);
 
         model.traverse((object) => {
@@ -155,7 +162,9 @@ export default function Scene({
             rimTarget,
             size: fittedModelSize,
             center: fittedModelCenter,
+            fillRatio: modelFillRatio,
           });
+          applyInitialOrbitAngles(controls, orbitProfileState);
         }
 
         setStatus?.("");
@@ -184,6 +193,7 @@ export default function Scene({
           rimTarget,
           size: fittedModelSize,
           center: fittedModelCenter,
+          fillRatio: modelFillRatio,
         });
       }
     };
@@ -196,14 +206,35 @@ export default function Scene({
       frameId = requestAnimationFrame(animate);
 
       updateMorphTargets(morphTargets, clock.getElapsedTime());
+      updateOrbitEdgeSmoothing(controls, orbitProfileState);
+
+      if (rotationDebugRef.current) {
+        const azimuthDeg = THREE.MathUtils.radToDeg(controls.getAzimuthalAngle());
+        const polarDeg = THREE.MathUtils.radToDeg(controls.getPolarAngle() - Math.PI / 2);
+        const modelRotX = modelRoot ? THREE.MathUtils.radToDeg(modelRoot.rotation.x) : 0;
+        const modelRotY = modelRoot ? THREE.MathUtils.radToDeg(modelRoot.rotation.y) : 0;
+        const modelRotZ = modelRoot ? THREE.MathUtils.radToDeg(modelRoot.rotation.z) : 0;
+        const camX = camera.position.x;
+        const camY = camera.position.y;
+        const camZ = camera.position.z;
+        const targetX = controls.target.x;
+        const targetY = controls.target.y;
+        const targetZ = controls.target.z;
+
+        rotationDebugRef.current.textContent =
+          `Orbit X (left/right): ${azimuthDeg.toFixed(1)}° | ` +
+          `Orbit Y (up/down): ${polarDeg.toFixed(1)}° | ` +
+          `Model rot (x,y,z): ${modelRotX.toFixed(1)}°, ${modelRotY.toFixed(1)}°, ${modelRotZ.toFixed(1)}° | ` +
+          `Camera pos (x,y,z): ${camX.toFixed(4)}, ${camY.toFixed(4)}, ${camZ.toFixed(4)} | ` +
+          `Target (x,y,z): ${targetX.toFixed(4)}, ${targetY.toFixed(4)}, ${targetZ.toFixed(4)}`;
+      }
 
       controls.update();
-      if (!showHDRIRef.current && modelRoot) {
+      if (modelRoot) {
         maskedComposite.renderMasked(renderer, scene, camera);
       } else {
         renderer.setRenderTarget(null);
         renderer.clear(true, true, true);
-        renderer.render(scene, camera);
       }
     };
     animate();
@@ -227,16 +258,15 @@ export default function Scene({
       });
       arcticEnvironment.dispose();
     };
-  }, [createEnvironmentScene, lightsEnabled]);
+  }, [createEnvironmentScene, lightsEnabled, modelPath]);
 
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 1, ease: "easeOut" }}
+      transition={{ duration: 2, ease: "easeOut" }}
     >
-      {/* {status ? <p className={styles.status}>{status}</p> : null} */}
       <Text
         onClick={handleTextClick}
         className={styles.sectionKey}
@@ -244,7 +274,13 @@ export default function Scene({
         text={activeSection?.sectionKey}
         typo="h3"
       />
-      <div ref={mountRef} className={styles.canvas} />;
+      {/* <div className={styles.rotationDebug}>
+        <span ref={rotationDebugRef} className={styles.rotationDebugText} />
+        <button type="button" className={styles.rotationDebugCopy} onClick={handleCopyDebug}>
+          {copied ? "Copied" : "Copy"}
+        </button>
+      </div> */}
+      <div ref={mountRef} className={styles.canvas} />
     </motion.div>
   );
 }

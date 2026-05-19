@@ -27,8 +27,7 @@ export function getVisibleMeshBounds(root) {
   return foundMesh ? worldBox : null;
 }
 
-export function frameCameraToModel({camera, controls, rimLight, rimTarget, size, center}) {
-  const fillRatio = 0.8;
+export function frameCameraToModel({camera, controls, rimLight, rimTarget, size, center, fillRatio = 1.6}) {
   const vFov = THREE.MathUtils.degToRad(camera.fov);
   const hFov = 2 * Math.atan(Math.tan(vFov / 2) * camera.aspect);
 
