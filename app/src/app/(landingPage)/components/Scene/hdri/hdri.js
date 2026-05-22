@@ -8,8 +8,8 @@ export function createHDRI() {
     side: THREE.BackSide,
     uniforms: {
       // Black-dominant grayscale palette.
-      topColor: { value: new THREE.Color(0x686868) },
-      horizonColor: { value: new THREE.Color(0x2a2a2a) },
+      topColor: { value: new THREE.Color(0x8f8f8f) },
+      horizonColor: { value: new THREE.Color(0x3e3e3e) },
       bottomColor: { value: new THREE.Color(0x080808) },
     },
     vertexShader: `
@@ -37,14 +37,14 @@ export function createHDRI() {
         color = mix(color, topColor, smoothstep(0.5, 1.0, h));
 
         // Add bright spot clusters for higher-contrast, glacial-feeling highlights.
-        float spotA = smoothstep(0.86, 1.0, hash(dir * 18.0));
-        float spotB = smoothstep(0.92, 1.0, hash(dir.yzx * 31.0));
-        float spotMask = clamp(spotA * 0.7 + spotB * 0.9, 0.0, 1.0);
+        float spotA = smoothstep(0.84, 1.0, hash(dir * 18.0));
+        float spotB = smoothstep(0.90, 1.0, hash(dir.yzx * 31.0));
+        float spotMask = clamp(spotA * 0.8 + spotB * 1.0, 0.0, 1.0);
         float horizonBoost = smoothstep(0.25, 0.9, h);
-        color += vec3(0.55) * spotMask * horizonBoost;
+        color += vec3(0.75) * spotMask * horizonBoost;
 
         // Slight contrast push while keeping dark dominance.
-        color = clamp((color - 0.5) * 1.2 + 0.5, 0.0, 1.0);
+        color = clamp((color - 0.5) * 1.16 + 0.5, 0.0, 1.0);
         gl_FragColor = vec4(color, 1.0);
       }
     `,
@@ -81,11 +81,11 @@ export function createHDRI() {
   }
   scene.add(iceCluster);
 
-  const envKey = new THREE.DirectionalLight(0xf0f0f0, 3.2);
+  const envKey = new THREE.DirectionalLight(0xffffff, 3.8);
   envKey.position.set(3, 6, 2);
   scene.add(envKey);
 
-  const envFill = new THREE.HemisphereLight(0x8a8a8a, 0x070707, 0.65);
+  const envFill = new THREE.HemisphereLight(0xa0a0a0, 0x070707, 0.75);
   scene.add(envFill);
 
   const dispose = () => {

@@ -61,6 +61,7 @@ const LandingPage = ({ page }) => {
           </motion.div>
         ) : (
           <Scene
+            key={`${activeSection.sectionKey}-${activeModel.modelPath}`}
             createEnvironmentScene={hdri}
             activeSection={activeSection}
             activeSectionIndex={activeSectionIndex}
