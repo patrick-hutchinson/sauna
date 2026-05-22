@@ -30,8 +30,8 @@ const MODEL_PROFILES = {
       maxOrbitY: 36.5,
     },
     initial: {
-      azimuth: 81.2,
-      orbitY: -10.7,
+      azimuth: 76.9,
+      orbitY: 7.2,
     },
   },
   "/assets/models/16/16.glb": {
@@ -56,6 +56,27 @@ const DEFAULTS = {
 
 function orbitYToPolar(orbitYDeg) {
   return THREE.MathUtils.degToRad(90 + orbitYDeg);
+}
+
+export function setOrbitAngles(controls, azimuthRad, polarRad) {
+  if (typeof controls.setAzimuthalAngle === "function" && typeof controls.setPolarAngle === "function") {
+    controls.setAzimuthalAngle(azimuthRad);
+    controls.setPolarAngle(polarRad);
+    controls.update();
+    return;
+  }
+
+  const target = controls.target;
+  const radius = Math.max(controls.object.position.distanceTo(target), 1e-6);
+  const sinPhiRadius = Math.sin(polarRad) * radius;
+
+  controls.object.position.set(
+    target.x + sinPhiRadius * Math.sin(azimuthRad),
+    target.y + Math.cos(polarRad) * radius,
+    target.z + sinPhiRadius * Math.cos(azimuthRad),
+  );
+  controls.object.lookAt(target);
+  controls.update();
 }
 
 export function getModelOrbitProfile(modelPath) {
@@ -105,9 +126,11 @@ export function applyOrbitControlsProfile(controls, modelPath) {
 
 export function applyInitialOrbitAngles(controls, profileState) {
   if (!profileState?.initial) return;
-  controls.setAzimuthalAngle(THREE.MathUtils.degToRad(profileState.initial.azimuth));
-  controls.setPolarAngle(orbitYToPolar(profileState.initial.orbitY));
-  controls.update();
+  setOrbitAngles(
+    controls,
+    THREE.MathUtils.degToRad(profileState.initial.azimuth),
+    orbitYToPolar(profileState.initial.orbitY),
+  );
 }
 
 export function updateOrbitEdgeSmoothing(controls, profileState) {

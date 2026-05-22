@@ -20,6 +20,7 @@ import Text from "@/components/Text/Text";
 export default function Scene({ createEnvironmentScene, lightsEnabled = true, activeSection, modelPath, setView }) {
   const [status, setStatus] = useState("Loading...");
   const [copied, setCopied] = useState(false);
+  const [modelLoaded, setModelLoaded] = useState(false);
   const mountRef = useRef(null);
   const rotationDebugRef = useRef(null);
 
@@ -47,6 +48,7 @@ export default function Scene({ createEnvironmentScene, lightsEnabled = true, ac
     if (!mountRef.current) return;
 
     setStatus?.("Loading model...");
+    setModelLoaded(false);
 
     const mount = mountRef.current;
     const scene = new THREE.Scene();
@@ -173,6 +175,7 @@ export default function Scene({ createEnvironmentScene, lightsEnabled = true, ac
         }
 
         setStatus?.("");
+        setModelLoaded(true);
       },
       undefined,
       (error) => {
@@ -268,7 +271,7 @@ export default function Scene({ createEnvironmentScene, lightsEnabled = true, ac
   return (
     <motion.div
       initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
+      animate={{ opacity: modelLoaded ? 1 : 0 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 2, ease: "easeOut" }}
     >
