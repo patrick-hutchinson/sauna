@@ -79,7 +79,12 @@ export default function Scene({ createEnvironmentScene, lightsEnabled = true, ac
     const isModel13 = modelPath === "/assets/models/13/13.glb";
     const isModel16 = modelPath === "/assets/models/16/16.glb";
     const orbitProfileState = applyOrbitControlsProfile(controls, modelPath);
-    const modelFillRatio = isModel16 ? 3.2 : isModel13 ? 1.067 : 1.6;
+    const getModelFillRatio = (clientWidth = window.innerWidth) => {
+      const isMobile = clientWidth <= 900;
+      if (isModel16) return 3.2;
+      if (isModel13) return isMobile ? 1.8 : 1.067;
+      return 1.6;
+    };
 
     const { rimLight, rimTarget } = setupIceLighting(scene, lightsEnabled);
 
@@ -162,7 +167,7 @@ export default function Scene({ createEnvironmentScene, lightsEnabled = true, ac
             rimTarget,
             size: fittedModelSize,
             center: fittedModelCenter,
-            fillRatio: modelFillRatio,
+            fillRatio: getModelFillRatio(mount.clientWidth),
           });
           applyInitialOrbitAngles(controls, orbitProfileState);
         }
@@ -193,7 +198,7 @@ export default function Scene({ createEnvironmentScene, lightsEnabled = true, ac
           rimTarget,
           size: fittedModelSize,
           center: fittedModelCenter,
-          fillRatio: modelFillRatio,
+          fillRatio: getModelFillRatio(clientWidth),
         });
       }
     };
