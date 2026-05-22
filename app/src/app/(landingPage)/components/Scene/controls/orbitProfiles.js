@@ -87,8 +87,8 @@ export function applyOrbitControlsProfile(controls, modelPath) {
   const profile = getModelOrbitProfile(modelPath);
 
   controls.enableDamping = true;
-  controls.enableZoom = true;
-  controls.enablePan = true;
+  controls.enableZoom = false;
+  controls.enablePan = false;
   controls.rotateSpeed = DEFAULTS.rotateSpeed;
   controls.dampingFactor = DEFAULTS.baseDamping;
 

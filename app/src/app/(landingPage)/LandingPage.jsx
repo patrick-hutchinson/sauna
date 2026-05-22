@@ -37,6 +37,17 @@ const LandingPage = ({ page }) => {
     setActiveSection(sections[randomIndex]);
   }, [page]);
 
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key !== "Escape") return;
+      if (view !== "model") return;
+      setView("text");
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [view]);
+
   if (!activeSection) return null;
 
   return (
