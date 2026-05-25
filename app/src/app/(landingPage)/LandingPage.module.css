@@ -79,6 +79,13 @@
   filter: grayscale();
 }
 
+@media screen and (max-width: 768px) {
+  .headerVideoSlot {
+    width: 42px;
+    height: 42px;
+  }
+}
+
 .headerVideo {
   position: absolute;
   inset: 0;
