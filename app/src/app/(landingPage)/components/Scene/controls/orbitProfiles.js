@@ -54,6 +54,13 @@ const DEFAULTS = {
   edgeDamping: 0.01,
 };
 
+const TOUCH_DEFAULTS = {
+  // Less resistant feel on touch: faster drag response, lighter damping.
+  rotateSpeed: 0.32,
+  baseDamping: 0.006,
+  edgeDamping: 0.006,
+};
+
 function orbitYToPolar(orbitYDeg) {
   return THREE.MathUtils.degToRad(90 + orbitYDeg);
 }
@@ -83,14 +90,16 @@ export function getModelOrbitProfile(modelPath) {
   return MODEL_PROFILES[modelPath] ?? null;
 }
 
-export function applyOrbitControlsProfile(controls, modelPath) {
+export function applyOrbitControlsProfile(controls, modelPath, options = {}) {
+  const {isTouch = false} = options;
   const profile = getModelOrbitProfile(modelPath);
+  const interaction = isTouch ? TOUCH_DEFAULTS : DEFAULTS;
 
   controls.enableDamping = true;
   controls.enableZoom = false;
   controls.enablePan = false;
-  controls.rotateSpeed = DEFAULTS.rotateSpeed;
-  controls.dampingFactor = DEFAULTS.baseDamping;
+  controls.rotateSpeed = interaction.rotateSpeed;
+  controls.dampingFactor = interaction.baseDamping;
 
   if (!profile) {
     controls.minAzimuthAngle = -Infinity;
@@ -106,7 +115,7 @@ export function applyOrbitControlsProfile(controls, modelPath) {
     controls.minPolarAngle = 0;
     controls.maxPolarAngle = Math.PI;
     return {
-      ...DEFAULTS,
+      ...interaction,
       limits: null,
       initial: profile.initial ?? null,
     };
@@ -118,7 +127,7 @@ export function applyOrbitControlsProfile(controls, modelPath) {
   controls.maxPolarAngle = orbitYToPolar(profile.limits.maxOrbitY);
 
   return {
-    ...DEFAULTS,
+    ...interaction,
     limits: profile.limits,
     initial: profile.initial ?? null,
   };

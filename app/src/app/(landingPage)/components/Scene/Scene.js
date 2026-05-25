@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
@@ -16,8 +16,10 @@ import styles from "../../LandingPage.module.css";
 import { motion } from "framer-motion";
 
 import Text from "@/components/Text/Text";
+import { DeviceContext } from "@/context/DeviceContext";
 
 export default function Scene({ createEnvironmentScene, lightsEnabled = true, activeSection, modelPath, setView }) {
+  const {isTouch} = useContext(DeviceContext);
   const [status, setStatus] = useState("Loading...");
   const [copied, setCopied] = useState(false);
   const [modelLoaded, setModelLoaded] = useState(false);
@@ -80,7 +82,7 @@ export default function Scene({ createEnvironmentScene, lightsEnabled = true, ac
     const controls = new OrbitControls(camera, renderer.domElement);
     const isModel13 = modelPath === "/assets/models/13/13.glb";
     const isModel16 = modelPath === "/assets/models/16/16.glb";
-    const orbitProfileState = applyOrbitControlsProfile(controls, modelPath);
+    const orbitProfileState = applyOrbitControlsProfile(controls, modelPath, {isTouch: Boolean(isTouch)});
     const getModelFillRatio = (clientWidth = window.innerWidth) => {
       const isMobile = clientWidth <= 900;
       if (isModel16) return 3.2;
@@ -266,7 +268,7 @@ export default function Scene({ createEnvironmentScene, lightsEnabled = true, ac
       });
       arcticEnvironment.dispose();
     };
-  }, [createEnvironmentScene, lightsEnabled, modelPath]);
+  }, [createEnvironmentScene, lightsEnabled, modelPath, isTouch]);
 
   return (
     <motion.div
