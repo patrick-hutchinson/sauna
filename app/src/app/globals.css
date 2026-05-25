@@ -1,13 +1,13 @@
 :root {
   --background: #000000;
   --foreground: #ffffff;
-  --accent: #8d8a8a;
+  --accent: #333;
 
   --margin-page: 36px;
 
   --content-height: calc(100vh - var(--header-height));
 
-  --transition: 0.4s ease;
+  --transition: 1s ease;
 }
 
 * {
@@ -46,12 +46,11 @@ body {
 
 ::selection {
   background: #000;
-  color: #333;
+  color: var(--accent);
 }
 
 main {
   min-height: calc(100vh - var(--header-height) - var(--footer-height) - var(--margin-page));
-  /* padding-top: var(--margin-page); */
 }
 
 button {
@@ -91,7 +90,7 @@ li {
 /* iPads and other Tablets */
 @media screen and (min-width: 769px) {
   :root {
-    --margin-page: 72px;
+    --margin-page: 60px;
   }
 }
 

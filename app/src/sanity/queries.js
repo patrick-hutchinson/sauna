@@ -23,3 +23,7 @@ export const landingPageQuery = `*[_type=="landingPage"][0]{
     sectionKey
   },
 }`;
+
+export const aboutPageQuery = `*[_type=="aboutPage"][0]{
+ credits
+}`;

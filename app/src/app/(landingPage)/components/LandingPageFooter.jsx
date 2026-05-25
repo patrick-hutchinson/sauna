@@ -1,4 +1,4 @@
-import styles from "../page.module.css";
+import styles from "../LandingPage.module.css";
 
 import { motion } from "framer-motion";
 

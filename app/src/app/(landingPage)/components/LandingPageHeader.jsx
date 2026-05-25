@@ -1,4 +1,5 @@
-import styles from "../page.module.css";
+import AnimationLink from "@/components/Animation/AnimationLink";
+import styles from "../LandingPage.module.css";
 
 import { motion } from "framer-motion";
 
@@ -16,6 +17,10 @@ const LandingPageHeader = ({ setView, thumbnailPath }) => {
       <video key={thumbnailPath} onClick={() => handleClick()} autoPlay muted loop playsInline>
         <source src={thumbnailPath} />
       </video>
+
+      <div className={styles.centerTitle}>Apern</div>
+
+      <AnimationLink path="/about">(i)</AnimationLink>
     </motion.div>
   );
 };

@@ -39,17 +39,38 @@
 
 .sectionTitle {
   cursor: pointer;
+  color: var(--accent);
+  transition: color 1s ease;
+}
+
+.sectionTitle:hover {
+  color: var(--foreground);
+}
+
+.active {
+  color: var(--foreground);
 }
 
 .landingPageHeader {
   position: fixed;
+  top: 0;
+  width: 100vw;
 
   padding: var(--margin-page);
-  top: 0px;
-  width: 100vw;
 
   mix-blend-mode: hard-light;
   filter: brightness(1.5);
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.centerTitle,
+.landingPageFooter a:nth-child(2) {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .landingPageHeader video {
@@ -108,4 +129,13 @@
 
 .rotationDebugCopy:hover {
   background: rgb(32 40 56 / 95%);
+}
+
+.aboutCredits {
+  text-align: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  white-space: pre-line;
 }

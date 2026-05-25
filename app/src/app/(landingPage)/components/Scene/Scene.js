@@ -11,7 +11,7 @@ import { setupIceLighting } from "./lighting/iceLighting";
 import { createMaskedCompositeRenderer } from "./render/maskedComposite";
 import { frameCameraToModel, getVisibleMeshBounds } from "./utils/modelFraming";
 import { applyInitialOrbitAngles, applyOrbitControlsProfile, updateOrbitEdgeSmoothing } from "./controls/orbitProfiles";
-import styles from "../../page.module.css";
+import styles from "../../LandingPage.module.css";
 
 import { motion } from "framer-motion";
 

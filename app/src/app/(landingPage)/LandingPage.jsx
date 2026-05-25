@@ -9,10 +9,10 @@ import { createHDRI } from "./components/Scene/hdri/hdri";
 import Scene from "./components/Scene/Scene";
 import Text from "@/components/Text/Text";
 
-import LandingPageHeader from "./components/LandingPageHeader";
-import LandingPageFooter from "./components/LandingPageFooter";
+import SiteHeader from "@/components/SiteChrome/SiteHeader";
+import SiteFooter from "@/components/SiteChrome/SiteFooter";
 
-import styles from "./page.module.css";
+import styles from "./LandingPage.module.css";
 
 const SECTION_MODELS = [
   { modelPath: "/assets/models/13/13.glb", thumbnailPath: "/assets/models/13/13.mp4" },
@@ -20,8 +20,8 @@ const SECTION_MODELS = [
   { modelPath: "/assets/models/16/16.glb", thumbnailPath: "/assets/models/16/16.mp4" },
 ];
 
-const LandingPage = ({ page }) => {
-  const [view, setView] = useState("model");
+const LandingPage = ({ page, selectedSectionKey, selectedView }) => {
+  const [view, setView] = useState(selectedView === "text" ? "text" : "model");
   const [activeSection, setActiveSection] = useState();
 
   const hdri = createHDRI;
@@ -33,9 +33,16 @@ const LandingPage = ({ page }) => {
   useEffect(() => {
     const sections = page?.sections ?? [];
     if (sections.length === 0) return;
+    const requested = sections.find((section) => section.sectionKey === selectedSectionKey);
+    if (requested) {
+      setActiveSection(requested);
+      setView(selectedView === "text" ? "text" : "model");
+      return;
+    }
+
     const randomIndex = Math.floor(Math.random() * sections.length);
     setActiveSection(sections[randomIndex]);
-  }, [page]);
+  }, [page, selectedSectionKey, selectedView]);
 
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -54,7 +61,11 @@ const LandingPage = ({ page }) => {
     <main className={styles.page}>
       <AnimatePresence mode="wait">
         {view === "text" && (
-          <LandingPageHeader key={activeSection.sectionKey} setView={setView} thumbnailPath={activeModel.thumbnailPath} />
+          <SiteHeader
+            thumbnailPath={activeModel.thumbnailPath}
+            onThumbnailClick={() => setView("model")}
+            infoPath="/about"
+          />
         )}
       </AnimatePresence>
 
@@ -84,11 +95,13 @@ const LandingPage = ({ page }) => {
 
       <AnimatePresence mode="wait">
         {view === "text" && (
-          <LandingPageFooter
-            page={page}
-            activeSection={activeSection}
-            setActiveSection={setActiveSection}
-            setView={setView}
+          <SiteFooter
+            sections={page.sections}
+            activeSectionKey={activeSection?.sectionKey}
+            onSectionClick={(section) => {
+              setView("text");
+              setActiveSection(section);
+            }}
           />
         )}
       </AnimatePresence>

@@ -1,5 +1,5 @@
 import { production, preview } from "./client";
-import { siteQuery, landingPageQuery } from "./queries";
+import { siteQuery, landingPageQuery, aboutPageQuery } from "./queries";
 
 const isProduction = process.env.VERCEL_ENV === "production";
 const isPreview = process.env.VERCEL_ENV === "preview";
@@ -20,4 +20,8 @@ export async function getSite() {
 
 export async function getLandingPage() {
   return client.fetch(landingPageQuery);
+}
+
+export async function getAboutPage() {
+  return client.fetch(aboutPageQuery);
 }

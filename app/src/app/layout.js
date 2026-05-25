@@ -78,9 +78,7 @@ export async function generateMetadata() {
 
 export const dynamic = "force-dynamic";
 
-export default async function RootLayout({ children }) {
-  const site = await getSite();
-
+export default function RootLayout({ children }) {
   return (
     <ViewTransitions>
       <html lang="en">
@@ -89,7 +87,6 @@ export default async function RootLayout({ children }) {
             <ScrollRestorationController />
             <body>
               {children}
-              <div id="portal"></div>
             </body>
           </ViewportProvider>
         </DeviceProvider>

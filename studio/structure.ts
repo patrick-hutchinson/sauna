@@ -4,7 +4,7 @@ import type {StructureResolver} from 'sanity/structure'
 import {MasterDetailIcon} from '@sanity/icons'
 import {DashboardIcon} from '@sanity/icons'
 
-const singletons = ['site', 'landingPage']
+const singletons = ['site', 'landingPage', 'aboutPage']
 
 const hiddenTypes = [...singletons]
 
@@ -29,6 +29,9 @@ export const structure: StructureResolver = (S, context) =>
               S.listItem()
                 .title('Landing Page')
                 .child(S.document().schemaType('landingPage').documentId('landingPage')),
+              S.listItem()
+                .title('About Page')
+                .child(S.document().schemaType('aboutPage').documentId('aboutPage')),
             ]),
         ),
 
