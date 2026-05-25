@@ -56,9 +56,9 @@ const DEFAULTS = {
 
 const TOUCH_DEFAULTS = {
   // Less resistant feel on touch: faster drag response, lighter damping.
-  rotateSpeed: 0.32,
-  baseDamping: 0.006,
-  edgeDamping: 0.006,
+  rotateSpeed: 0.42,
+  baseDamping: 0.0042,
+  edgeDamping: 0.0042,
 };
 
 function orbitYToPolar(orbitYDeg) {
