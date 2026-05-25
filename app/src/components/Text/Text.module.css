@@ -1,0 +1,3 @@
+.portableParagraph:has(> br:last-child) {
+  margin-bottom: 1em;
+}
