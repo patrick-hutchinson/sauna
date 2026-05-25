@@ -1,6 +1,6 @@
 import { useAnimatedNavigation } from "./hooks/useAnimatedNavigation";
 
-const AnimationLink = ({ path, link, children, className, onMouseEnter, onMouseLeave }) => {
+const AnimationLink = ({ path, link, children, className, onMouseEnter, onMouseLeave, typo }) => {
   const navigate = useAnimatedNavigation();
 
   const resolveInternalHref = (internalLink) => {
@@ -54,10 +54,11 @@ const AnimationLink = ({ path, link, children, className, onMouseEnter, onMouseL
       href={href}
       className={className}
       onClick={handleClick}
-      onMouseEnter={onMouseEnter} // <--- add
-      onMouseLeave={onMouseLeave} // <--- add
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
       target={isExternal ? "_blank" : undefined}
       rel={isExternal ? "noopener noreferrer" : undefined}
+      typo={typo}
     >
       {children}
     </a>

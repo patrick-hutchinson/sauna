@@ -1,15 +1,15 @@
 "use client";
 
 import Text from "@/components/Text/Text";
-import SiteHeader from "@/components/SiteChrome/SiteHeader";
-import SiteFooter from "@/components/SiteChrome/SiteFooter";
+import LandingPageHeader from "../(landingPage)/components/LandingPageHeader";
+import LandingPageFooter from "../(landingPage)/components/LandingPageFooter";
 import styles from "../(landingPage)/LandingPage.module.css";
 import { AnimatePresence } from "framer-motion";
 
 const SECTION_MODELS = [
-  { thumbnailPath: "/assets/models/13/13.mp4" },
-  { thumbnailPath: "/assets/models/14/14.mp4" },
-  { thumbnailPath: "/assets/models/16/16.mp4" },
+  { thumbnailPath: "/assets/models/13/13.gif" },
+  { thumbnailPath: "/assets/models/14/14.gif" },
+  { thumbnailPath: "/assets/models/16/16.gif" },
 ];
 
 const AboutPage = ({ page, landingPage }) => {
@@ -20,7 +20,7 @@ const AboutPage = ({ page, landingPage }) => {
 
   return (
     <main className={styles.page}>
-      <SiteHeader thumbnailPath={defaultThumbnail} onThumbnailClick={undefined} infoPath="/about" />
+      <LandingPageHeader thumbnailPath={defaultThumbnail} />
 
       <AnimatePresence key="aboutCredits">
         <div className={styles.aboutCredits}>
@@ -28,9 +28,11 @@ const AboutPage = ({ page, landingPage }) => {
         </div>
       </AnimatePresence>
 
-      <SiteFooter
-        sections={sections}
-        activeSectionKey={null}
+      <LandingPageFooter
+        page={{ sections }}
+        activeSection={null}
+        setActiveSection={() => {}}
+        setView={() => {}}
         getSectionHref={(section) =>
           `/?section=${encodeURIComponent(section.sectionKey ?? section.sectionTitle ?? "")}&view=text`
         }

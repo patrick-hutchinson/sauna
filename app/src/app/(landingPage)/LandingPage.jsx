@@ -9,15 +9,15 @@ import { createHDRI } from "./components/Scene/hdri/hdri";
 import Scene from "./components/Scene/Scene";
 import Text from "@/components/Text/Text";
 
-import SiteHeader from "@/components/SiteChrome/SiteHeader";
-import SiteFooter from "@/components/SiteChrome/SiteFooter";
+import LandingPageHeader from "./components/LandingPageHeader";
+import LandingPageFooter from "./components/LandingPageFooter";
 
 import styles from "./LandingPage.module.css";
 
 const SECTION_MODELS = [
-  { modelPath: "/assets/models/13/13.glb", thumbnailPath: "/assets/models/13/13.mp4" },
-  { modelPath: "/assets/models/14/14.glb", thumbnailPath: "/assets/models/14/14.mp4" },
-  { modelPath: "/assets/models/16/16.glb", thumbnailPath: "/assets/models/16/16.mp4" },
+  { modelPath: "/assets/models/13/13.glb", thumbnailPath: "/assets/models/13/13.gif" },
+  { modelPath: "/assets/models/14/14.glb", thumbnailPath: "/assets/models/14/14.gif" },
+  { modelPath: "/assets/models/16/16.glb", thumbnailPath: "/assets/models/16/16.gif" },
 ];
 
 const LandingPage = ({ page, selectedSectionKey, selectedView }) => {
@@ -60,13 +60,7 @@ const LandingPage = ({ page, selectedSectionKey, selectedView }) => {
   return (
     <main className={styles.page}>
       <AnimatePresence mode="wait">
-        {view === "text" && (
-          <SiteHeader
-            thumbnailPath={activeModel.thumbnailPath}
-            onThumbnailClick={() => setView("model")}
-            infoPath="/about"
-          />
-        )}
+        {view === "text" && <LandingPageHeader thumbnailPath={activeModel.thumbnailPath} setView={setView} />}
       </AnimatePresence>
 
       <AnimatePresence mode="wait">
@@ -95,13 +89,12 @@ const LandingPage = ({ page, selectedSectionKey, selectedView }) => {
 
       <AnimatePresence mode="wait">
         {view === "text" && (
-          <SiteFooter
-            sections={page.sections}
-            activeSectionKey={activeSection?.sectionKey}
-            onSectionClick={(section) => {
-              setView("text");
-              setActiveSection(section);
-            }}
+          <LandingPageFooter
+            page={page}
+            activeSection={activeSection}
+            setActiveSection={setActiveSection}
+            setView={setView}
+            shouldAnimate
           />
         )}
       </AnimatePresence>
