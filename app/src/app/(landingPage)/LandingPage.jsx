@@ -60,20 +60,36 @@ const LandingPage = ({ page, selectedSectionKey, selectedView }) => {
   return (
     <main className={styles.page}>
       <AnimatePresence mode="wait">
-        {view === "text" && <LandingPageHeader thumbnailPath={activeModel.thumbnailPath} setView={setView} />}
-      </AnimatePresence>
-
-      <AnimatePresence mode="wait">
         {view === "text" ? (
           <motion.div
-            className={styles.sectionText}
-            key={activeSection.sectionKey}
+            key="text-view"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 2, ease: "easeOut" }}
           >
-            <Text text={activeSection.sectionText} typo="h3" />
+            <LandingPageHeader thumbnailPath={activeModel.thumbnailPath} setView={setView} />
+
+            <AnimatePresence mode="wait">
+              <motion.div
+                className={styles.sectionText}
+                key={activeSection.sectionKey}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 2, ease: "easeOut" }}
+              >
+                <Text text={activeSection.sectionText} typo="h3" />
+              </motion.div>
+            </AnimatePresence>
+
+            <LandingPageFooter
+              page={page}
+              activeSection={activeSection}
+              setActiveSection={setActiveSection}
+              setView={setView}
+              shouldAnimate
+            />
           </motion.div>
         ) : (
           <Scene
@@ -83,18 +99,6 @@ const LandingPage = ({ page, selectedSectionKey, selectedView }) => {
             activeSectionIndex={activeSectionIndex}
             modelPath={activeModel.modelPath}
             setView={setView}
-          />
-        )}
-      </AnimatePresence>
-
-      <AnimatePresence mode="wait">
-        {view === "text" && (
-          <LandingPageFooter
-            page={page}
-            activeSection={activeSection}
-            setActiveSection={setActiveSection}
-            setView={setView}
-            shouldAnimate
           />
         )}
       </AnimatePresence>

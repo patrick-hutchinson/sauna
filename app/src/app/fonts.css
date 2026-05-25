@@ -12,7 +12,8 @@ h3,
   letter-spacing: var(--letter-spacing-3);
 }
 h3 p,
-[typo="h3"] p {
+[typo="h3"] p,
+[typo="h3"] br {
   margin-bottom: var(--paragraph-spacing-3);
   min-height: var(--font-size-3);
 }
