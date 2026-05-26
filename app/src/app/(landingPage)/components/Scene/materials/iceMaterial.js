@@ -1,15 +1,34 @@
 import * as THREE from "three";
 
+function softenTexture(texture, anisotropy = 16) {
+  if (!texture) return null;
+  texture.generateMipmaps = true;
+  // Trilinear filtering avoids visible mip-step pixel blocks on grazing angles.
+  texture.minFilter = THREE.LinearMipmapLinearFilter;
+  texture.magFilter = THREE.LinearFilter;
+  texture.anisotropy = anisotropy;
+  texture.needsUpdate = true;
+  return texture;
+}
+
 export function createIceMaterial(sourceMaterial) {
+  const map = softenTexture(sourceMaterial?.map ?? null);
+  const normalMap = softenTexture(sourceMaterial?.normalMap ?? null);
+  const roughnessMap = softenTexture(sourceMaterial?.roughnessMap ?? null);
+  const metalnessMap = softenTexture(sourceMaterial?.metalnessMap ?? null);
+  const aoMap = softenTexture(sourceMaterial?.aoMap ?? null);
+  const displacementMap = softenTexture(sourceMaterial?.displacementMap ?? null);
+  const alphaMap = softenTexture(sourceMaterial?.alphaMap ?? null);
+
   const material = new THREE.MeshPhysicalMaterial({
-    map: sourceMaterial?.map ?? null,
-    normalMap: sourceMaterial?.normalMap ?? null,
-    roughnessMap: sourceMaterial?.roughnessMap ?? null,
-    metalnessMap: sourceMaterial?.metalnessMap ?? null,
-    aoMap: sourceMaterial?.aoMap ?? null,
-    displacementMap: sourceMaterial?.displacementMap ?? null,
-    alphaMap: sourceMaterial?.alphaMap ?? null,
-    normalScale: new THREE.Vector2(3.02, 3.02),
+    map,
+    normalMap,
+    roughnessMap,
+    metalnessMap,
+    aoMap,
+    displacementMap,
+    alphaMap,
+    normalScale: new THREE.Vector2(2.2, 2.2),
     transmission: 1,
     thickness: 1.8,
     roughness: 0.6,
@@ -17,8 +36,8 @@ export function createIceMaterial(sourceMaterial) {
     envMapIntensity: 1.5,
     clearcoat: 0.21,
     clearcoatRoughness: 0.14,
-    clearcoatNormalMap: sourceMaterial?.normalMap ?? null,
-    clearcoatNormalScale: new THREE.Vector2(3.78, 3.78),
+    clearcoatNormalMap: normalMap,
+    clearcoatNormalScale: new THREE.Vector2(2.8, 2.8),
     ior: 1.5,
     transparent: true,
   });

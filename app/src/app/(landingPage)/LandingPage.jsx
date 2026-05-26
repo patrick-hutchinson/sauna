@@ -15,9 +15,9 @@ import LandingPageFooter from "./components/LandingPageFooter";
 import styles from "./LandingPage.module.css";
 
 const SECTION_MODELS = [
-  { modelPath: "/assets/models/13/13.glb", thumbnailPath: "/assets/models/13/13.gif" },
-  { modelPath: "/assets/models/14/14.glb", thumbnailPath: "/assets/models/14/14.gif" },
-  { modelPath: "/assets/models/16/16.glb", thumbnailPath: "/assets/models/16/16.gif" },
+  { modelPath: "/assets/models/13/13-optimized.glb", thumbnailPath: "/assets/models/13/13.gif" },
+  { modelPath: "/assets/models/14/14-optimized.glb", thumbnailPath: "/assets/models/14/14.gif" },
+  { modelPath: "/assets/models/16/16-optimized.glb", thumbnailPath: "/assets/models/16/16.gif" },
 ];
 
 const LandingPage = ({ page, selectedSectionKey, selectedView }) => {
@@ -79,7 +79,7 @@ const LandingPage = ({ page, selectedSectionKey, selectedView }) => {
                 exit={{ opacity: 0 }}
                 transition={{ duration: 2, ease: "easeOut" }}
               >
-                <Text text={activeSection.sectionText} typo="h3" />
+                <Text text={activeSection.sectionText} typo="h2" />
               </motion.div>
             </AnimatePresence>
 

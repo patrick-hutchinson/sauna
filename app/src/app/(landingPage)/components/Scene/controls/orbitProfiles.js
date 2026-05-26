@@ -1,7 +1,7 @@
 import * as THREE from "three";
 
 const MODEL_PROFILES = {
-  "/assets/models/13/13.glb": {
+  "/assets/models/13/13-optimized.glb": {
     limits: {
       minAzimuth: -Infinity,
       maxAzimuth: Infinity,
@@ -14,7 +14,7 @@ const MODEL_PROFILES = {
       orbitY: -20.0,
     },
   },
-  "/assets/models/01/01.glb": {
+  "/assets/models/01/01-optimized.glb": {
     limits: {
       minAzimuth: -50,
       maxAzimuth: 50,
@@ -22,7 +22,7 @@ const MODEL_PROFILES = {
       maxOrbitY: 50,
     },
   },
-  "/assets/models/14/14.glb": {
+  "/assets/models/14/14-optimized.glb": {
     limits: {
       minAzimuth: 24.1,
       maxAzimuth: 138.3,
@@ -34,7 +34,7 @@ const MODEL_PROFILES = {
       orbitY: 7.2,
     },
   },
-  "/assets/models/16/16.glb": {
+  "/assets/models/16/16-optimized.glb": {
     limits: {
       minAzimuth: -77.2,
       maxAzimuth: -19.3,
@@ -49,16 +49,17 @@ const MODEL_PROFILES = {
 };
 
 const DEFAULTS = {
-  rotateSpeed: 0.15,
-  baseDamping: 0.01,
-  edgeDamping: 0.01,
+  // Easier drag + shorter glide on release.
+  rotateSpeed: 0.14,
+  baseDamping: 0.04,
+  edgeDamping: 0.02,
 };
 
 const TOUCH_DEFAULTS = {
-  // Less resistant feel on touch: faster drag response, lighter damping.
-  rotateSpeed: 0.42,
-  baseDamping: 0.0042,
-  edgeDamping: 0.0042,
+  // Keep touch easier than desktop but reduce post-drag slide.
+  rotateSpeed: 0.52,
+  baseDamping: 0.024,
+  edgeDamping: 0.024,
 };
 
 function orbitYToPolar(orbitYDeg) {
@@ -91,7 +92,7 @@ export function getModelOrbitProfile(modelPath) {
 }
 
 export function applyOrbitControlsProfile(controls, modelPath, options = {}) {
-  const {isTouch = false} = options;
+  const { isTouch = false } = options;
   const profile = getModelOrbitProfile(modelPath);
   const interaction = isTouch ? TOUCH_DEFAULTS : DEFAULTS;
 

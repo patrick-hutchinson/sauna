@@ -3,7 +3,14 @@ import styles from "../LandingPage.module.css";
 
 import { AnimatePresence, motion } from "framer-motion";
 
-const LandingPageHeader = ({ setView, thumbnailPath, onThumbnailClick }) => {
+const LandingPageHeader = ({
+  setView,
+  thumbnailPath,
+  onThumbnailClick,
+  infoLabel = "(i)",
+  infoPath = "/about",
+  onInfoClick,
+}) => {
   const handleClick = () => {
     if (onThumbnailClick) {
       onThumbnailClick();
@@ -37,11 +44,19 @@ const LandingPageHeader = ({ setView, thumbnailPath, onThumbnailClick }) => {
         </AnimatePresence>
       </div>
 
-      <div className={styles.centerTitle}>Apern</div>
-
-      <AnimationLink className={styles.aboutLink} path={"/about"}>
-        (i)
+      <AnimationLink className={styles.centerTitle} path="/">
+        Apern
       </AnimationLink>
+
+      {onInfoClick ? (
+        <button type="button" className={styles.aboutLink} onClick={onInfoClick}>
+          {infoLabel}
+        </button>
+      ) : (
+        <AnimationLink className={styles.aboutLink} path={infoPath}>
+          {infoLabel}
+        </AnimationLink>
+      )}
     </motion.div>
   );
 };

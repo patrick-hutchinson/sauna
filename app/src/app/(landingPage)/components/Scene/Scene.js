@@ -19,7 +19,7 @@ import Text from "@/components/Text/Text";
 import { DeviceContext } from "@/context/DeviceContext";
 
 export default function Scene({ createEnvironmentScene, lightsEnabled = true, activeSection, modelPath, setView }) {
-  const {isTouch} = useContext(DeviceContext);
+  const { isTouch } = useContext(DeviceContext);
   const [status, setStatus] = useState("Loading...");
   const [copied, setCopied] = useState(false);
   const [modelLoaded, setModelLoaded] = useState(false);
@@ -80,9 +80,9 @@ export default function Scene({ createEnvironmentScene, lightsEnabled = true, ac
     const maskedComposite = createMaskedCompositeRenderer();
 
     const controls = new OrbitControls(camera, renderer.domElement);
-    const isModel13 = modelPath === "/assets/models/13/13.glb";
-    const isModel16 = modelPath === "/assets/models/16/16.glb";
-    const orbitProfileState = applyOrbitControlsProfile(controls, modelPath, {isTouch: Boolean(isTouch)});
+    const isModel13 = modelPath === "/assets/models/13/13-optimized.glb";
+    const isModel16 = modelPath === "/assets/models/16/16-optimized.glb";
+    const orbitProfileState = applyOrbitControlsProfile(controls, modelPath, { isTouch: Boolean(isTouch) });
     const getModelFillRatio = (clientWidth = window.innerWidth) => {
       const isMobile = clientWidth <= 900;
       if (isModel16) return 3.2;
@@ -106,7 +106,7 @@ export default function Scene({ createEnvironmentScene, lightsEnabled = true, ac
       (gltf) => {
         const model = gltf.scene;
         modelRoot = model;
-        if (modelPath === "/assets/models/14/14.glb") {
+        if (modelPath === "/assets/models/14/14-optimized.glb") {
           model.rotation.x = Math.PI / 2;
         }
         scene.add(model);
@@ -195,17 +195,8 @@ export default function Scene({ createEnvironmentScene, lightsEnabled = true, ac
       renderer.setSize(clientWidth, clientHeight);
       maskedComposite.setSize(clientWidth, clientHeight);
 
-      if (fittedModelSize) {
-        frameCameraToModel({
-          camera,
-          controls,
-          rimLight,
-          rimTarget,
-          size: fittedModelSize,
-          center: fittedModelCenter,
-          fillRatio: getModelFillRatio(clientWidth),
-        });
-      }
+      // Keep the original framing fixed across viewport resizes.
+      // Reframing here changes effective zoom because fit distance depends on aspect ratio.
     };
 
     resize();
@@ -282,7 +273,7 @@ export default function Scene({ createEnvironmentScene, lightsEnabled = true, ac
         className={styles.sectionKey}
         style={sectionKeyPositionStyle}
         text={activeSection?.sectionKey}
-        typo="h3"
+        typo="h2"
       />
       {/* <div className={styles.rotationDebug}>
         <span ref={rotationDebugRef} className={styles.rotationDebugText} />
