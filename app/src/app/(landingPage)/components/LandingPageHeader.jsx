@@ -7,7 +7,7 @@ const LandingPageHeader = ({
   setView,
   thumbnailPath,
   onThumbnailClick,
-  infoLabel = "(i)",
+  infoLabel = "Info",
   infoPath = "/about",
   onInfoClick,
 }) => {

@@ -55,7 +55,7 @@ const AboutPage = ({ page, landingPage }) => {
         <LandingPageHeader
           thumbnailPath={defaultThumbnail}
           onThumbnailClick={handleThumbnailClick}
-          infoLabel="(x)"
+          infoLabel="Close"
           onInfoClick={handleAboutClose}
         />
       </motion.div>
